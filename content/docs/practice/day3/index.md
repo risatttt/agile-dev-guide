@@ -512,6 +512,7 @@ proxyの設定によりServerが応答できるようになり、200が返却さ
 ここまでのソースは
 [https://github.com/onebase-fujitsu/todo-app-vite/tree/feature/step6](https://github.com/onebase-fujitsu/todo-app-vite/tree/feature/step6)
 に置いてあります。
+
 ---
 
 4日目に続きます
