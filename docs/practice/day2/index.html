@@ -307,43 +307,35 @@ Ran all test suites.
 </span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>default</span> <span style=color:#a6e22e>TodoProvider</span>
 </span></span></code></pre></div><p><code>TodoContext.tsx</code>では、<code>TodoContext</code>と<code>TodoProvider</code>の2つを定義しています。</p><p><code>TodoContext</code>はTodoの配列をとその中身を設定するための関数を持っています。また、<code>TodoProvider</code>は<code>TodoContext</code>を子コンポーネントで使用できるようにするため、<code>TodoContex.Provider</code>で子コンポーネントをラップする形になっています。</p><p>次に、<code>TodoList.tsx</code>をTodoContextを使用するように修正します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#75715e>// TodoList.test.tsx
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>import</span> {<span style=color:#a6e22e>render</span>, <span style=color:#a6e22e>screen</span>, <span style=color:#a6e22e>waitFor</span>} <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;@testing-library/react&#39;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#a6e22e>React</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;react&#39;</span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#a6e22e>TodoList</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;../../src/components/TodoList&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> {<span style=color:#a6e22e>TodoContext</span>} <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;../../src/context/TodoContext&#34;</span>;
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#a6e22e>describe</span>(<span style=color:#e6db74>&#39;TodoList.tsx Component&#39;</span>, () <span style=color:#f92672>=&gt;</span> {
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>todoContextMock</span>: <span style=color:#66d9ef>jest.Mock</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#a6e22e>beforeEach</span>(() <span style=color:#f92672>=&gt;</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>todoContextMock</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>React</span>.<span style=color:#a6e22e>useContext</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jest</span>.<span style=color:#a6e22e>fn</span>()
-</span></span><span style=display:flex><span>  })
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  <span style=color:#a6e22e>it</span>(<span style=color:#e6db74>&#39;todoContextが空ならリストも空&#39;</span>, () <span style=color:#f92672>=&gt;</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>todoContextMock</span>.<span style=color:#a6e22e>mockReturnValue</span>({
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>todos</span><span style=color:#f92672>:</span> []
-</span></span><span style=display:flex><span>    })
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>render</span>(&lt;<span style=color:#f92672>TodoList</span> /&gt;)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>render</span>(
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>TodoContext.Provider</span> <span style=color:#a6e22e>value</span><span style=color:#f92672>=</span>{{<span style=color:#a6e22e>todos</span><span style=color:#f92672>:</span> [], <span style=color:#a6e22e>setTodos</span>: <span style=color:#66d9ef>jest.fn</span>()}}&gt;
+</span></span><span style=display:flex><span>              &lt;<span style=color:#f92672>TodoList</span> /&gt;
+</span></span><span style=display:flex><span>            &lt;/<span style=color:#f92672>TodoContext.Provider</span>&gt;
+</span></span><span style=display:flex><span>    )
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>expect</span>(<span style=color:#a6e22e>screen</span>.<span style=color:#a6e22e>getByRole</span>(<span style=color:#e6db74>&#39;list&#39;</span>).<span style=color:#a6e22e>hasChildNodes</span>()).<span style=color:#a6e22e>toEqual</span>(<span style=color:#66d9ef>false</span>)
 </span></span><span style=display:flex><span>  })
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  <span style=color:#a6e22e>it</span>(<span style=color:#e6db74>&#39;todoContextがあればリストアイテムを表示&#39;</span>, <span style=color:#66d9ef>async</span> () <span style=color:#f92672>=&gt;</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>todoContextMock</span>.<span style=color:#a6e22e>mockReturnValue</span>({
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>todos</span><span style=color:#f92672>:</span> [
-</span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>          <span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>1</span>,
-</span></span><span style=display:flex><span>          <span style=color:#a6e22e>title</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;title&#39;</span>,
-</span></span><span style=display:flex><span>          <span style=color:#a6e22e>completed</span>: <span style=color:#66d9ef>false</span>
-</span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>      ]
-</span></span><span style=display:flex><span>    })
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>render</span>(&lt;<span style=color:#f92672>TodoList</span> /&gt;)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>render</span>(
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>TodoContext.Provider</span> <span style=color:#a6e22e>value</span><span style=color:#f92672>=</span>{{<span style=color:#a6e22e>todos</span><span style=color:#f92672>:</span> [{
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>1</span>,
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>title</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;title&#39;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>completed</span>: <span style=color:#66d9ef>false</span>,
+</span></span><span style=display:flex><span>              },], <span style=color:#a6e22e>setTodos</span>: <span style=color:#66d9ef>jest.fn</span>()}}&gt;
+</span></span><span style=display:flex><span>              &lt;<span style=color:#f92672>TodoList</span> /&gt;
+</span></span><span style=display:flex><span>            &lt;/<span style=color:#f92672>TodoContext.Provider</span>&gt;
+</span></span><span style=display:flex><span>    )
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>expect</span>(<span style=color:#a6e22e>screen</span>.<span style=color:#a6e22e>getByRole</span>(<span style=color:#e6db74>&#39;list&#39;</span>).<span style=color:#a6e22e>hasChildNodes</span>()).<span style=color:#a6e22e>toEqual</span>(<span style=color:#66d9ef>true</span>)
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>waitFor</span>(() <span style=color:#f92672>=&gt;</span>
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>expect</span>(<span style=color:#a6e22e>screen</span>.<span style=color:#a6e22e>getByRole</span>(<span style=color:#e6db74>&#39;listitem&#39;</span>).<span style=color:#a6e22e>textContent</span>).<span style=color:#a6e22e>toEqual</span>(<span style=color:#e6db74>&#39;title&#39;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>expect</span>(<span style=color:#a6e22e>screen</span>.<span style=color:#a6e22e>getByRole</span>(<span style=color:#e6db74>&#39;listitem&#39;</span>).<span style=color:#a6e22e>textContent</span>).<span style=color:#a6e22e>toEqual</span>(<span style=color:#e6db74>&#39;title&#39;</span>),
 </span></span><span style=display:flex><span>    )
 </span></span><span style=display:flex><span>  })
 </span></span><span style=display:flex><span>})
