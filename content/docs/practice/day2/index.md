@@ -408,43 +408,35 @@ export default TodoProvider
 ```typescript jsx
 // TodoList.test.tsx
 import {render, screen, waitFor} from '@testing-library/react'
-import React from 'react'
 import TodoList from '../../src/components/TodoList'
+import {TodoContext} from "../../src/context/TodoContext";
 
 describe('TodoList.tsx Component', () => {
-  let todoContextMock: jest.Mock
-
-  beforeEach(() => {
-    todoContextMock = React.useContext = jest.fn()
-  })
-
   it('todoContextが空ならリストも空', () => {
-    todoContextMock.mockReturnValue({
-      todos: []
-    })
-
-    render(<TodoList />)
+    render(
+            <TodoContext.Provider value={{todos: [], setTodos: jest.fn()}}>
+              <TodoList />
+            </TodoContext.Provider>
+    )
 
     expect(screen.getByRole('list').hasChildNodes()).toEqual(false)
   })
 
   it('todoContextがあればリストアイテムを表示', async () => {
-    todoContextMock.mockReturnValue({
-      todos: [
-        {
-          id: 1,
-          title: 'title',
-          completed: false
-        }
-      ]
-    })
-
-    render(<TodoList />)
+    render(
+            <TodoContext.Provider value={{todos: [{
+                id: 1,
+                title: 'title',
+                completed: false,
+              },], setTodos: jest.fn()}}>
+              <TodoList />
+            </TodoContext.Provider>
+    )
 
     expect(screen.getByRole('list').hasChildNodes()).toEqual(true)
 
     await waitFor(() =>
-      expect(screen.getByRole('listitem').textContent).toEqual('title')
+            expect(screen.getByRole('listitem').textContent).toEqual('title'),
     )
   })
 })
