@@ -217,7 +217,7 @@ Flywayはアプリケーション起動時にdb/migrationディレクトリ配�
 ### GET /todosのテスト
 
 ではまず/todosに対してGETをしたときに、データベースにアクセスして、Todo一覧をJSON形式で返却するテストを書いてみましょう。
-src/test/kotlin/com.fujitsu.todoappserver配下にcontrollerパッケージを作り、その中に`TodoApiControllerTest.kt`を作りましょう
+src/test/kotlin/com.fujitsu.todoappserver配下にcontrollerパッケージを作り、その中に`TodoControllerTest.kt`を作りましょう
 
 ```
 src
@@ -241,12 +241,12 @@ src
                 └── todoappserver
                     ├── TodoAppServerApplicationTests.kt
                     └── controller
-                        └── TodoApiControllerTest.kt    // 作成
+                        └── TodoControllerTest.kt    // 作成
 
 ```
 
 ```kotlin
-// TodoApiControllerTest.kt
+// TodoControllerTest.kt
 package com.fujitsu.todoappserver.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -259,7 +259,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TodoApiControllerTest {
+class TodoControllerTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate
 
